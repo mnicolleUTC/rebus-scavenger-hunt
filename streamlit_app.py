@@ -1,4 +1,25 @@
+from PIL import Image
+import requests
+from io import BytesIO
 import streamlit as st
+
+def crop_bottom_of_image_from_url(url: str, crop_ratio: float = 0.15) -> Image.Image:
+    """
+    Downloads an image from a URL and crops a percentage from the bottom.
+    
+    Args:
+        url (str): URL of the image.
+        crop_ratio (float): Fraction of the image height to crop from the bottom (0.0 to 1.0).
+    
+    Returns:
+        PIL.Image.Image: The cropped image.
+    """
+    response = requests.get(url)
+    img = Image.open(BytesIO(response.content))
+    width, height = img.size
+    cropped_height = int(height * (1 - crop_ratio))
+    return img.crop((0, 0, width, cropped_height))
+
 
 st.title("Voici ton rébus ! 👰‍♀️")
 
@@ -24,13 +45,9 @@ st.image(
 )
 
 st.image(
-    "https://c8.alamy.com/compfr/2fkdx60/illustration-vectorielle-de-dessin-anime-de-scie-a-main-isolee-2fkdx60.jpg"
+    crop_bottom_of_image_from_url("https://c8.alamy.com/compfr/2fkdx60/illustration-vectorielle-de-dessin-anime-de-scie-a-main-isolee-2fkdx60.jpg")
 )
 
 st.image(
-    "https://c8.alamy.com/compfr/2fkdx60/illustration-vectorielle-de-dessin-anime-de-scie-a-main-isolee-2fkdx60.jpg"
-)
-
-st.image(
-    "https://thumbs.dreamstime.com/z/rope-knot-vector-rope-knot-vector-eps-146466384.jpg"
+    crop_bottom_of_image_from_url("https://thumbs.dreamstime.com/z/rope-knot-vector-rope-knot-vector-eps-146466384.jpg")
 )
